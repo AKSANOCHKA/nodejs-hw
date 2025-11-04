@@ -40,13 +40,20 @@ app.get('/notes/:noteId', (req, res) => {
   res.status(200).json({ message: `Retrieved note with ID: ${noteId}` });
 });
 
-app.get('/test-error', () => {
-  throw new Error('Simulated server error');
+app.get('/test-error', (req, res, next) => {
+  next(new Error('Simulated server error'));
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+process.on('unhandledRejection', err => {
+  console.error(`Unhandled rejection: ${err.message}`);
+  process.exit(1);
+});
+
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });

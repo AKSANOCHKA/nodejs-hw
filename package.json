@@ -1,7 +1,6 @@
 {
   "name": "nodejs-hw",
   "version": "1.0.0",
-  "description": "",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
@@ -32,5 +31,6 @@
     "express": "^5.1.0",
     "pino-http": "^11.0.0",
     "pino-pretty": "^13.1.2"
-  }
+  },
+  "description": ""
 }

@@ -49,4 +49,6 @@ const startServer = async () => {
   }
 };
 
-startServer(); // <-- Викликається тільки один раз
+startServer();
+
+

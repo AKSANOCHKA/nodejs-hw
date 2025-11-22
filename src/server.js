@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(logger);
 
 // ROUTES
-app.use('/notes', notesRoutes);
+app.use(notesRoutes);
 
 // ERROR HANDLERS
 app.use(notFoundHandler);
@@ -38,8 +38,5 @@ const startServer = async () => {
     process.exit(1);
   }
 };
-
-startServer();
-
 
 startServer();

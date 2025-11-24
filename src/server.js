@@ -24,13 +24,14 @@ app.use(logger);
 // маршрути
 app.use(notesRoutes);
 
-// ❗ 404 обробник МАЄ йти перед errors()
+// ❗ правильний порядок:
+// 1) 404
 app.use(notFoundHandler);
 
-// celebrate errors — після 404
+// 2) celebrate errors
 app.use(errors());
 
-// глобальний обробник помилок
+// 3) глобальний handler помилок
 app.use(errorHandler);
 
 const startServer = async () => {

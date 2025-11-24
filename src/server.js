@@ -21,12 +21,16 @@ app.use(cors());
 app.use(express.json());
 app.use(logger);
 
+// маршрути
 app.use(notesRoutes);
 
-app.use(errors());
-
+// ❗ 404 обробник МАЄ йти перед errors()
 app.use(notFoundHandler);
 
+// celebrate errors — після 404
+app.use(errors());
+
+// глобальний обробник помилок
 app.use(errorHandler);
 
 const startServer = async () => {
@@ -44,5 +48,6 @@ const startServer = async () => {
 };
 
 startServer();
+
 
 

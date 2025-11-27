@@ -1,4 +1,3 @@
-// server.js
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
@@ -23,6 +22,9 @@ app.use(logger);
 
 // маршрути
 app.use(notesRoutes);
+
+// обробка favicon, щоб не було 500
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // ❗ правильний порядок:
 // 1) 404
@@ -49,6 +51,5 @@ const startServer = async () => {
 };
 
 startServer();
-
 
 

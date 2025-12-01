@@ -1,5 +1,4 @@
-import { Schema } from 'mongoose';
-import { model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
 const noteSchema = new Schema(
@@ -21,6 +20,11 @@ const noteSchema = new Schema(
       enum: TAGS,
       default: 'Todo',
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',   // посилання на модель User
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -28,6 +32,7 @@ const noteSchema = new Schema(
   },
 );
 
+// Текстовий індекс для пошуку по title та content
 noteSchema.index(
   {
     title: 'text',
@@ -37,3 +42,4 @@ noteSchema.index(
 );
 
 export const Note = model('Note', noteSchema);
+

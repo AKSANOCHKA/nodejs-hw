@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { celebrate } from 'celebrate';
 
 import {
   getAllNotes,
@@ -13,26 +14,36 @@ import {
   noteIdSchema,
   createNoteSchema,
   updateNoteSchema,
-} from '../validations/notesSchemas.js';
+} from '../validations/notesValidation.js';
+
+import { authenticate } from '../middleware/authenticate.js';
 
 const router = Router();
 
-// GET /notes
-router.get('/notes', getAllNotesSchema, getAllNotes);
+// Захист усіх маршрутів
+router.use(authenticate);
 
-// GET /notes/:id
-router.get('/notes/:id', noteIdSchema, getNoteById);
+// GET /notes
+router.get('/notes', celebrate({ query: getAllNotesSchema }), getAllNotes);
+
+// GET /notes/:noteId
+router.get('/notes/:noteId', celebrate({ params: noteIdSchema }), getNoteById);
 
 // POST /notes
-router.post('/notes', createNoteSchema, createNote);
+router.post('/notes', celebrate({ body: createNoteSchema }), createNote);
 
-// PATCH /notes/:id
-router.patch('/notes/:id', updateNoteSchema, updateNote);
+// PATCH /notes/:noteId
+router.patch(
+  '/notes/:noteId',
+  celebrate({ params: noteIdSchema, body: updateNoteSchema }),
+  updateNote
+);
 
-// DELETE /notes/:id
-router.delete('/notes/:id', noteIdSchema, deleteNote);
+// DELETE /notes/:noteId
+router.delete('/notes/:noteId', celebrate({ params: noteIdSchema }), deleteNote);
 
 export default router;
+
 
 
 

@@ -3,14 +3,14 @@ import createHttpError from 'http-errors';
 
 // GET /notes
 export const getAllNotes = async (req, res) => {
+  const userId = req.user._id;
   const { page = 1, perPage = 10, tag, search } = req.query;
 
   const pageNum = Number(page);
   const perPageNum = Number(perPage);
-
   const skip = (pageNum - 1) * perPageNum;
 
-  const notesQuery = Note.find();
+  const notesQuery = Note.find({ userId }); // ❗ Повертаємо лише свої нотатки
 
   if (tag) {
     notesQuery.where('tag').equals(tag);
@@ -34,11 +34,12 @@ export const getAllNotes = async (req, res) => {
   });
 };
 
-// GET /notes/:id
+// GET /notes/:noteId
 export const getNoteById = async (req, res, next) => {
-  const { id } = req.params;
+  const { noteId } = req.params;
+  const userId = req.user._id;
 
-  const note = await Note.findById(id);
+  const note = await Note.findOne({ _id: noteId, userId }); // ❗ Пошук лише серед своїх нотаток
   if (!note) {
     return next(createHttpError(404, 'Note not found'));
   }
@@ -48,15 +49,23 @@ export const getNoteById = async (req, res, next) => {
 
 // POST /notes
 export const createNote = async (req, res) => {
-  const note = await Note.create(req.body);
+  const userId = req.user._id;
+
+  const note = await Note.create({
+    ...req.body,
+    userId, // ❗ Прив’язка нотатки до користувача
+  });
+
   res.status(201).json(note);
 };
 
-// DELETE /notes/:id
+// DELETE /notes/:noteId
 export const deleteNote = async (req, res, next) => {
-  const { id } = req.params;
+  const { noteId } = req.params;
+  const userId = req.user._id;
 
-  const note = await Note.findByIdAndDelete(id);
+  const note = await Note.findOneAndDelete({ _id: noteId, userId }); // ❗ Delete своїх тільки
+
   if (!note) {
     return next(createHttpError(404, 'Note not found'));
   }
@@ -64,15 +73,22 @@ export const deleteNote = async (req, res, next) => {
   res.status(200).json(note);
 };
 
-// PATCH /notes/:id
+// PATCH /notes/:noteId
 export const updateNote = async (req, res, next) => {
-  const { id } = req.params;
+  const { noteId } = req.params;
+  const userId = req.user._id;
 
-  const note = await Note.findByIdAndUpdate(id, req.body, { new: true });
+  const note = await Note.findOneAndUpdate(
+    { _id: noteId, userId }, // ❗ Update тільки своїх
+    req.body,
+    { new: true },
+  );
+
   if (!note) {
     return next(createHttpError(404, 'Note not found'));
   }
 
   res.status(200).json(note);
 };
+
 

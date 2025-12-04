@@ -11,6 +11,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 
 import notesRoutes from './routes/notesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { errors } from 'celebrate';
@@ -28,6 +29,7 @@ app.use(logger);
 // 📌 Routes (❗ без префіксів)
 app.use(authRoutes);
 app.use(notesRoutes);
+app.use(userRoutes);
 
 // 🧩 Favicon fix
 app.get('/favicon.ico', (req, res) => res.status(204).end());
